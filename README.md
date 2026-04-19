@@ -91,3 +91,17 @@ Since the local administrator account and machine were compromised, the first ac
 | Internal DNS resolution — Domain Controller reconnaissance | Command & Control | T1018 — Remote System Discovery | `172.16.0.7` / `python.exe` | `index="mydfir_soc" sourcetype="sysmon" source="sysmon.csv" 172.16.0.7 python.exe \|table Image QueryName QueryResults User Computer` |
 | Creation of a scheduled task to ensure persistence | Persistence | T1053.005 — Scheduled Task | Task `PythonUpdate` — EventCode 4104 / Command: `schtasks.exe /create /tn "PythonUpdate" /tr "C:\Users\Ryan.Adams\Music\python.exe" /sc onstart /ru SYSTEM /f` | `index="mydfir_soc" sourcetype="winevent:powershell" source="powershell.csv" schtasks \|table ScriptBlock_ID _time EventCode Message` |
 
+## Timeline 
+- Brute Force
+  - 12:51:44=>12:52:57 : Multiple profile connection failures in less than 30 seconds
+    <img width="1840" height="711" alt="image" src="https://github.com/user-attachments/assets/17353dc4-1e78-4e30-aac7-b4f6901f49bd" />
+  - 12:52:12 : Connection confirmed from IP `172.16.0.184` with admin privileges on Ryan's profile
+    <img width="1846" height="457" alt="image" src="https://github.com/user-attachments/assets/72a9d9de-cc75-4c13-82b9-345ff9cd4d59" />
+
+  
+- Modification Defender
+- Python.exe dowload
+- Execution of `python.exe`
+- C2 Connection and Domain Controller Reconnaissance:
+- Scheduled task created.
+	
