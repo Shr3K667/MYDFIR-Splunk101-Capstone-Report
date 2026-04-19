@@ -147,6 +147,8 @@ Multiple independent sources classify the IP as malicious
 
 # Continuous improvement
 
+Threat mitigation and protection measures to be implemented based on a medium-to-long-term vision, following risk analysis and action prioritization
+
 ### MFA on RDP
 
 No second factor was in place despite RDP being exposed internally. Enforce MFA on all RDP endpoints — intra-LAN exposure is a real vector as demonstrated by this incident. Restrict RDP access to a dedicated jump host or VPN gateway.
