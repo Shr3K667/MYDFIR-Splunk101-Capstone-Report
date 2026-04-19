@@ -130,7 +130,7 @@ The absence of classification suggests low distribution or custom tooling.
 ### Infrastructure Reputation
 
 #### VirusTotal
- http://157.245.46.190:9999/ 
+ `http://157.245.46.190:9999/` 
  
 <img width="1394" height="683" alt="image" src="https://github.com/user-attachments/assets/03705b4d-3624-4610-b7a0-fdf793a02bd0" />
 - 11/98 vendors flagged as malicious
