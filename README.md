@@ -6,12 +6,12 @@ Ryan Adams, a local administrator at a small dental clinic, contacted the MahCyb
 
 As a SOC analyst, your task is to investigate this incident using Splunk. Analyze the available data to determine what occurred, identify any indicators of compromise, and document your findings in a SOC report using the provided format found in the community.
 
-**SIEM**: Splunk
-**Index:** `mydfir-soc`
-**Timezone:** UTC
-**Incident Date:** 15 October 2025
-**Data Hour Range:** 12:00:11 => 13:10:07
-**Files** : 
+- **SIEM**: Splunk
+- **Index:** `mydfir-soc`
+- **Timezone:** UTC
+- **Incident Date:** 15 October 2025
+- **Data Hour Range:** 12:00:11 => 13:10:07
+- **Files** : 
 
 | Files           | Start    | End      | Event nb |
 | --------------- | -------- | -------- | -------: |
