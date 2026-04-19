@@ -97,11 +97,72 @@ Since the local administrator account and machine were compromised, the first ac
     <img width="1840" height="711" alt="image" src="https://github.com/user-attachments/assets/17353dc4-1e78-4e30-aac7-b4f6901f49bd" />
   - 12:52:12 : Connection confirmed from IP `172.16.0.184` with admin privileges on Ryan's profile
     <img width="1846" height="457" alt="image" src="https://github.com/user-attachments/assets/72a9d9de-cc75-4c13-82b9-345ff9cd4d59" />
-
-  
 - Modification Defender
+  - 12:55:50 : Real time protection scanning disabled on FRONTDESK-PC1
+    <img width="1853" height="745" alt="image" src="https://github.com/user-attachments/assets/60977dfa-38e2-4008-a8c2-86a7b4103968" />
 - Python.exe dowload
+  - 12:59:26: File downloaded via an HTTP request with a successful **GET 200** response on **FRONTDESK-PC1**
+    <img width="1875" height="846" alt="image" src="https://github.com/user-attachments/assets/b08427c4-e95c-4683-9c97-1139e1baa618" />
 - Execution of `python.exe`
+  - 13:00:33: ID1/ID7: `python.exe` loaded from the **Music** directory.
+    <img width="1855" height="427" alt="image" src="https://github.com/user-attachments/assets/5e5fa1a1-6f34-48df-b6d2-c376f0da1780" />
 - C2 Connection and Domain Controller Reconnaissance:
+  - 13:00:34— **ID3**: Outbound connection to `157.245.46.190:8888`
+  - 13:00:35— **ID3**: Outbound connection to `172.16.0.7:49669`
+    <img width="1860" height="464" alt="image" src="https://github.com/user-attachments/assets/3cde397f-9008-4279-8aed-a20654d85f9e" />
 - Scheduled task created.
-	
+  - 13:04:16 : PowerShell execution and creation of a scheduled job
+	<img width="1862" height="209" alt="image" src="https://github.com/user-attachments/assets/f8aa24b7-ee8a-47d8-9e8d-7cb6b666d78a" />
+
+## Reputation Analysis
+
+### File Hash Reputation
+
+#### TalosIntelligence
+
+<img width="1273" height="853" alt="image" src="https://github.com/user-attachments/assets/5b0ac242-38e9-4838-8705-8bf4ec4a7154" />
+- Disposition: Unknown
+- Detection Name: Not found
+- Associated Domains: None
+
+The absence of classification suggests low distribution or custom tooling.
+
+### Infrastructure Reputation
+
+#### VirusTotal
+ http://157.245.46.190:9999/ 
+ 
+<img width="1394" height="683" alt="image" src="https://github.com/user-attachments/assets/03705b4d-3624-4610-b7a0-fdf793a02bd0" />
+- 11/98 vendors flagged as malicious
+- Classification: Malware / Malicious
+
+#### AbuseIPDB
+<img width="1398" height="849" alt="image" src="https://github.com/user-attachments/assets/c006d8a4-12c2-4509-85be-1a5e56f81fd9" />
+- Reported 115 times
+- 29 distinct reporters
+- Categories: Hacking, Port Scanning, DNS Compromise
+- ISP: DigitalOcean LLC
+
+Multiple independent sources classify the IP as malicious
+
+# Continuous improvement
+
+### MFA on RDP
+
+No second factor was in place despite RDP being exposed internally. Enforce MFA on all RDP endpoints — intra-LAN exposure is a real vector as demonstrated by this incident. Restrict RDP access to a dedicated jump host or VPN gateway.
+
+### Account Lockout Policy
+
+49 failed attempts on Ryan.Adams triggered no lockout. Configure GPO lockout threshold at 5–10 attempts / 10-minute observation window. Pair with a SIEM alert on 4625 bursts from a single source IP to catch slow-and-low variants that stay under the lockout threshold.
+
+### Brute Force Detection
+
+162 EventCode 4625 and 573 EventCode 4776 events went unalerted. Create a correlation rule: N failed logons from a single IP across multiple accounts within a time window, followed by a 4624 success. Include 4776 (NTLM) in scope 
+
+### Defense Tampering Detection
+
+Defender Real-Time Protection was disabled (EventCode 5001) with no alert. 5001 and 5007 should be P1 near-real-time alerts — there is no legitimate reason for this to occur outside a maintenance window. Enable Tamper Protection via Microsoft Defender for Endpoint to block programmatic disabling entirely.
+
+### Non-Signed Executable Detection
+
+`python.exe` executed from `Music\`, unsigned, with a Zone.Identifier ADS confirming internet origin — none of this triggered an alert. Build a compound detection rule: execution from a user-writable non-standard path + unsigned binary + Zone.Identifier present (Sysmon EID 1, 7, 15). 
