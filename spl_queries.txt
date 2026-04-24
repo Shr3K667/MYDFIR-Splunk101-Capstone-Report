@@ -1,1 +1,25 @@
+=== SPL QUERIES FROM CAPSTONE REPORT ===
 
+1. SCOPING (Portée de l'incident)
+---------------------------------
+index="mydfir_soc" python.exe |stats count by Computer
+
+index="mydfir_soc" PythonUpdate |stats count by Computer
+
+index="mydfir_soc" 157.245.46.190 |stats count by src_ip, dest_ip
+
+index="mydfir_soc" sourcetype="winevent:security" EventCode=4624 src_ip="172.16.0.184" ComputerName!="FRONTDESK-PC1.KCD.local"
+
+2. CREDENTIAL DUMPING (LSASS/Mimikatz)
+--------------------------------------
+index="mydfir_soc" sourcetype="sysmon" source="sysmon.csv" EventCode="10" TargetImage="*lsass.exe"
+
+index="mydfir_soc" sourcetype="sysmon" host="FRONTDESK-PC1" (CommandLine="*sekurlsa*" OR CommandLine="*mimikatz*" OR CommandLine="*lsadump*" OR CommandLine="*privilege::debug*") | table _time, Image, CommandLine, User | sort _time
+
+3. ACTIVITÉS MALVEILLANTES (C2, Reconnaissance, Persistance)
+------------------------------------------------------------
+index="mydfir_soc" sourcetype="sysmon" source="sysmon.csv" python EventID IN (7,1,3) |table _time EventID src_ip dest_ip ProcessId Image ImageLoaded Hashes Signed Signature SignatureStatus
+
+index="mydfir_soc" sourcetype="sysmon" source="sysmon.csv" 172.16.0.7 python.exe |table Image QueryName QueryResults User Computer
+
+index="mydfir_soc" sourcetype="winevent:powershell" source="powershell.csv" schtasks |table ScriptBlock_ID _time EventCode Message
